@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NextLabs | AI & Web Systems Masterclass</title>
+    <style>
+        :root {
+            --bg: #F5E6C8;
+            --secondary: #E8D7B9;
+            --text: #1F1F1F;
+            --accent: #C97B3D;
+            --brown: #5B4636;
+            --olive: #556B2F;
+            --border: 2px solid #5B4636;
+            --shadow: 5px 5px 0px #5B4636;
+            --transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+        }
+
+        @font-face {
+            font-family: 'Technical';
+            src: local('Courier New'), local('Courier');
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: "Georgia", serif;
+            line-height: 1.7;
+            background-image: 
+                linear-gradient(rgba(91, 70, 54, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(91, 70, 54, 0.05) 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+
+        h1, h2, h3, h4, .mono {
+            font-family: 'Technical', monospace;
+            text-transform: uppercase;
+            letter-spacing: -1px;
+        }
+
+        /* --- UI COMPONENTS --- */
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 25px;
+        }
+
+        .blueprint-card {
+            background: var(--secondary);
+            border: var(--border);
+            padding: 40px;
+            margin: 40px 0;
+            box-shadow: var(--shadow);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .blueprint-card::after {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-image: radial-gradient(var(--brown) 0.5px, transparent 0.5px);
+            background-size: 15px 15px;
+            opacity: 0.03;
+            pointer-events: none;
+        }
+
+        .stamp {
+            display: inline-block;
+            border: 3px solid var(--accent);
+            color: var(--accent);
+            padding: 5px 15px;
+            font-weight: bold;
+            transform: rotate(-3deg);
+            margin-bottom: 15px;
+            font-family: 'Technical', monospace;
+        }
+
+        .tag {
+            background: var(--olive);
+            color: white;
+            padding: 2px 10px;
+            font-size: 0.8rem;
+            border-radius: 2px;
+            font-family: monospace;
+        }
+
+        /* --- NAVIGATION --- */
+
+        nav {
+            position: fixed;
+            top: 0; width: 100%;
+            background: var(--bg);
+            border-bottom: var(--border);
+            z-index: 1000;
+            padding: 15px 0;
+        }
+
+        .nav-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .progress-container {
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            height: 4px;
+            background: var(--accent);
+            width: 0%;
+            transition: width 0.1s;
+        }
+
+        /* --- HERO --- */
+
+        #hero {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            border-bottom: 10px double var(--brown);
+            position: relative;
+        }
+
+        .hero-inner {
+            max-width: 800px;
+        }
+
+        .hero-title {
+            font-size: clamp(2.5rem, 8vw, 5rem);
+            line-height: 0.9;
+            margin-bottom: 20px;
+            color: var(--brown);
+        }
+
+        .hero-subtitle {
+            font-size: 1.2rem;
+            border-top: 2px solid var(--brown);
+            padding-top: 20px;
+            margin-bottom: 40px;
+        }
+
+        /* --- MODULES --- */
+
+        section {
+            padding: 100px 0;
+            opacity: 0;
+            transform: translateY(50px);
+            transition: var(--transition);
+        }
+
+        section.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+        }
+
+        @media (max-width: 768px) {
+            .grid-2 { grid-template-columns: 1fr; }
+        }
+
+        /* --- ANALOGY BOXES --- */
+
+        .analogy-box {
+            border-left: 5px solid var(--accent);
+            padding: 20px;
+            background: rgba(201, 123, 61, 0.1);
+            margin: 20px 0;
+            font-style: italic;
+        }
+
+        /* --- ANIMATED FLOWS --- */
+
+        .flow-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin: 50px 0;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .flow-step {
+            border: var(--border);
+            padding: 20px;
+            background: white;
+            flex: 1;
+            min-width: 150px;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .flow-arrow {
+            font-size: 2rem;
+            color: var(--accent);
+        }
+
+        /* --- QUIZ --- */
+
+        .quiz-option {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            border: var(--border);
+            background: white;
+            margin: 10px 0;
+            cursor: pointer;
+            text-align: left;
+            transition: 0.2s;
+            font-family: 'Technical', monospace;
+        }
+
+        .quiz-option:hover {
+            background: var(--accent);
+            color: white;
+            transform: translateX(10px);
+        }
+
+        /* --- CASE STUDIES --- */
+
+        .case-study {
+            border: 4px solid var(--olive);
+            border-radius: 20px;
+            padding: 30px;
+            background: #fff;
+        }
+
+        .recap {
+            background: var(--brown);
+            color: white;
+            padding: 30px;
+            margin-top: 40px;
+        }
+
+        .recap h4 { color: var(--accent); }
+
+        footer {
+            background: var(--brown);
+            color: var(--bg);
+            padding: 80px 0;
+            text-align: center;
+        }
+
+    </style>
+</head>
+<body>
+
+    <nav>
+        <div class="container nav-content">
+            <div class="mono" style="font-weight: 900;">NEXTLABS // VIBE_CODING</div>
+            <div class="mono" style="font-size: 0.8rem;">CURRICULUM v2.5.0</div>
+        </div>
+        <div class="progress-container" id="progressBar"></div>
+    </nav>
+
+    <!-- HERO -->
+    <header id="hero">
+        <div class="container hero-inner">
+            <div class="stamp">CLASSIFIED EDUCATIONAL MATERIAL</div>
+            <h1 class="hero-title">HOW THE <br>MODERN WORLD <br>WORKS</h1>
+            <p class="hero-subtitle">The Complete Guide to AI, Websites, and App Architecture for the Non-Technical Mind.</p>
+            <a href="#intro" class="mono" style="color: var(--brown); text-decoration: none; border: 2px solid var(--brown); padding: 15px 30px;">[ INITIALIZE BOOTCAMP ]</a>
+        </div>
+    </header>
+
+    <div class="container">
+
+        <!-- MODULE: AI FOR LEARNING -->
+        <section id="intro">
+            <h2 class="mono" style="font-size: 3rem;">01. AI for Learning</h2>
+            <div class="blueprint-card">
+                <h3>The Evolution of Knowledge</h3>
+                <p><strong>What is Learning?</strong> At its core, learning is the process of acquiring new understanding, skills, and values. Traditionally, this was a "one-to-many" model (one teacher, thirty students). <strong>AI shifts this to a "one-to-one" model.</strong></p>
+                
+                <div class="grid-2">
+                    <div>
+                        <h4>Why Learning Is Hard:</h4>
+                        <ul>
+                            <li><strong>Information Overload:</strong> Too many sources, not enough clarity.</li>
+                            <li><strong>Lack of Guidance:</strong> Not knowing where to start.</li>
+                            <li><strong>Poor Retention:</strong> "In one ear, out the other."</li>
+                        </ul>
+                    </div>
+                    <div class="analogy-box">
+                        <strong>Analogy:</strong> Learning without AI is like searching a library with no catalog. Learning with AI is like having the author sit next to you and explain every page.
+                    </div>
+                </div>
+            </div>
+
+            <div class="blueprint-card">
+                <h3>AI as Your Educational Partner</h3>
+                <div class="grid-2">
+                    <div>
+                        <h4>1. The AI Tutor</h4>
+                        <p>Ask: "Explain this like I'm 10." AI adjusts its complexity to your current level instantly.</p>
+                        
+                        <h4>2. The AI Coach</h4>
+                        <p>It doesn't just give answers; it gives feedback. "Here is my essay, tell me how to make it more persuasive."</p>
+                    </div>
+                    <div>
+                        <h4>3. The Research Assistant</h4>
+                        <p>Instead of Googling for 3 hours, AI can scan thousands of papers to find exactly what you need in seconds.</p>
+                    </div>
+                </div>
+
+                <div class="recap">
+                    <h4>✓ MODULE RECAP</h4>
+                    <p>AI transforms learning from a passive struggle into an active, personalized conversation. It solves the "one-size-fits-all" problem of modern education.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- MODULE: AI STUDY TECHNIQUES -->
+        <section>
+            <h2 class="mono">02. Modern Study Techniques</h2>
+            <div class="grid-2">
+                <div class="blueprint-card">
+                    <h3>Active Recall & Spaced Repetition</h3>
+                    <p>AI can instantly generate <strong>flashcards</strong> and <strong>practice quizzes</strong> from your messy lecture notes. This forces your brain to "pull" information out, which is 10x more effective than just re-reading.</p>
+                </div>
+                <div class="blueprint-card">
+                    <h3>The Feedback Loop</h3>
+                    <div class="flow-container" style="flex-direction: column; align-items: flex-start;">
+                        <div class="flow-step">1. Topic Understanding</div>
+                        <div class="flow-arrow">↓</div>
+                        <div class="flow-step">2. AI Practice Question</div>
+                        <div class="flow-arrow">↓</div>
+                        <div class="flow-step">3. Immediate AI Feedback</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="blueprint-card">
+                <h3>Skill Learning Case Study</h3>
+                <p><strong>Learning Coding:</strong> AI explains the logic, helps you find bugs, and suggests better ways to write code.</p>
+                <p><strong>Learning Languages:</strong> Practice speaking with an AI that doesn't judge your accent and corrects your grammar in real-time.</p>
+            </div>
+        </section>
+
+        <!-- MODULE: PRODUCTIVITY -->
+        <section>
+            <h2 class="mono">03. AI for Productivity</h2>
+            <div class="blueprint-card">
+                <h3>Busy vs. Productive</h3>
+                <p>Being <strong>Busy</strong> is answering 100 useless emails. Being <strong>Productive</strong> is finishing the one project that actually matters. AI handles the "busy" work so you can do the "brain" work.</p>
+                
+                <div class="grid-2" style="margin-top:20px;">
+                    <div class="case-study">
+                        <h4>Deep Work</h4>
+                        <p>AI can summarize long meetings, draft project plans, and organize your calendar, allowing you to stay in "the zone" longer.</p>
+                    </div>
+                    <div class="case-study">
+                        <h4>Writing & Content</h4>
+                        <p>Overcome "Blank Page Syndrome." Use AI to outline, research, and edit. You remain the Director; the AI is your Crew.</p>
+                    </div>
+                </div>
+
+                <div class="analogy-box">
+                    <strong>Analogy:</strong> AI is like a power tool. A hammer (traditional tool) helps you hit a nail. A nail gun (AI tool) helps you build the whole house in half the time.
+                </div>
+            </div>
+        </section>
+
+        <!-- MODULE: HOW WEBSITES WORK -->
+        <section id="web-tech">
+            <h2 class="mono" style="font-size: 3rem;">04. How Websites Work</h2>
+            <div class="blueprint-card">
+                <h3>The Internet: A Postal Service</h3>
+                <p>The Internet is not a "cloud." It is a series of wires. A <strong>Website</strong> is just a folder of files sitting on a computer that is always turned on (a <strong>Server</strong>).</p>
+                
+                <div class="flow-container">
+                    <div class="flow-step"><strong>USER</strong><br>Types URL</div>
+                    <div class="flow-arrow">→</div>
+                    <div class="flow-step"><strong>DNS</strong><br>Finds Address</div>
+                    <div class="flow-arrow">→</div>
+                    <div class="flow-step"><strong>SERVER</strong><br>Sends Files</div>
+                    <div class="flow-arrow">→</div>
+                    <div class="flow-step"><strong>BROWSER</strong><br>Shows Page</div>
+                </div>
+            </div>
+
+            <div class="grid-2">
+                <div class="blueprint-card">
+                    <h3>DNS: The Phonebook</h3>
+                    <p>Computers use numbers (IP addresses: 142.250.190.46). Humans use names (google.com). <strong>DNS</strong> is the service that translates the name to the number.</p>
+                </div>
+                <div class="blueprint-card">
+                    <h3>Hosting: The Land</h3>
+                    <p><strong>Hosting</strong> is renting space on a powerful computer. <strong>Domain</strong> is your street address. You need both to exist online.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- MODULE: FRONTEND / BACKEND -->
+        <section>
+            <h2 class="mono">05. The Three Pillars</h2>
+            <div class="grid-2">
+                <div class="blueprint-card">
+                    <div class="stamp">FRONTEND</div>
+                    <h4>The Face</h4>
+                    <p>What you see and click.</p>
+                    <ul>
+                        <li><strong>HTML:</strong> The Skeleton (Structure)</li>
+                        <li><strong>CSS:</strong> The Skin (Style/Beauty)</li>
+                        <li><strong>JS:</strong> The Muscles (Action)</li>
+                    </ul>
+                </div>
+                <div class="blueprint-card">
+                    <div class="stamp" style="border-color: var(--olive); color: var(--olive);">BACKEND</div>
+                    <h4>The Brain</h4>
+                    <p>What happens behind the curtain.</p>
+                    <ul>
+                        <li><strong>Authentication:</strong> Logging in safely.</li>
+                        <li><strong>Logic:</strong> Calculating taxes or discounts.</li>
+                        <li><strong>Communication:</strong> Sending emails.</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="blueprint-card" style="text-align: center;">
+                <div class="stamp" style="border-color: var(--brown); color: var(--brown);">DATABASE</div>
+                <h4>The Memory</h4>
+                <p>A giant, organized warehouse of information. Every photo you post, every "like" you give, and your encrypted password lives here forever.</p>
+                <p class="mono" style="margin-top:10px;">FRONTEND ↔ BACKEND ↔ DATABASE</p>
+            </div>
+        </section>
+
+        <!-- MODULE: APPS -->
+        <section>
+            <h2 class="mono">06. How Apps Work</h2>
+            <div class="blueprint-card">
+                <h3>APIs: The Waiter</h3>
+                <p>An <strong>API</strong> (Application Programming Interface) is how two apps talk to each other. </p>
+                <div class="analogy-box">
+                    <strong>Analogy:</strong> You are the customer (App). The Kitchen is the Database. You don't go into the kitchen. You tell the <strong>Waiter (API)</strong> what you want, and they bring it to you.
+                </div>
+            </div>
+
+            <div class="grid-2">
+                <div class="case-study">
+                    <h4>WhatsApp</h4>
+                    <p><strong>Data Flow:</strong> You type message → Frontend sends to API → Backend encrypts it → Database stores it temporarily → Notification API pokes your friend's phone.</p>
+                </div>
+                <div class="case-study">
+                    <h4>Uber</h4>
+                    <p>Uses <strong>Google Maps API</strong> for location, <strong>Stripe API</strong> for payments, and their own <strong>Algorithm Backend</strong> to find the closest driver.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- FINAL QUIZ -->
+        <section id="quiz">
+            <h2 class="mono" style="text-align: center;">Knowledge Checkpoint</h2>
+            <div class="blueprint-card" id="quiz-box">
+                <h3 id="quiz-question">Ready to test your knowledge?</h3>
+                <div id="quiz-options">
+                    <button class="btn mono" onclick="startQuiz()" style="width:100%; padding: 20px; background: var(--brown); color: white; border: none; cursor:pointer;">[ START ASSESSMENT ]</button>
+                </div>
+            </div>
+        </section>
+
+    </div>
+
+    <footer>
+        <div class="container">
+            <h2 class="mono">NextLabs Vibe Coding Bootcamp</h2>
+            <p>Empowering the next generation of digital architects.</p>
+            <div style="margin-top: 40px; font-family: monospace; opacity: 0.6;">
+                CREATED BY ISTAB MAIBAM | © 2024 VINTAGE TECH INDUSTRIES
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Progress Bar Logic
+        window.onscroll = function() {
+            let winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            let height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            let scrolled = (winScroll / height) * 100;
+            document.getElementById("progressBar").style.width = scrolled + "%";
+            
+            // Trigger Reveal
+            document.querySelectorAll('section').forEach(sec => {
+                let top = window.scrollY;
+                let offset = sec.offsetTop - 600;
+                if (top >= offset) {
+                    sec.classList.add('active');
+                }
+            });
+        };
+
+        // Quiz Data
+        const questions = [
+            {
+                q: "What is the primary role of DNS?",
+                o: ["Storing photos", "Translating domain names to IP addresses", "Making websites pretty"],
+                a: 1
+            },
+            {
+                q: "In the restaurant analogy, what is the API?",
+                o: ["The Chef", "The Customer", "The Waiter"],
+                a: 2
+            },
+            {
+                q: "Which part of a website acts as the 'Skeleton'?",
+                o: ["CSS", "HTML", "JavaScript"],
+                a: 1
+            },
+            {
+                q: "What does a Backend handle?",
+                o: ["Colors and Fonts", "Business Logic and Security", "Layout and Buttons"],
+                a: 1
+            }
+        ];
+
+        let currentQ = 0;
+        let score = 0;
+
+        function startQuiz() {
+            renderQuestion();
+        }
+
+        function renderQuestion() {
+            const q = questions[currentQ];
+            const box = document.getElementById('quiz-question');
+            const opts = document.getElementById('quiz-options');
+            
+            box.innerText = `${currentQ + 1}. ${q.q}`;
+            opts.innerHTML = '';
+            
+            q.o.forEach((option, i) => {
+                const btn = document.createElement('button');
+                btn.className = 'quiz-option';
+                btn.innerText = option;
+                btn.onclick = () => handleAnswer(i);
+                opts.appendChild(btn);
+            });
+        }
+
+        function handleAnswer(idx) {
+            if(idx === questions[currentQ].a) score++;
+            currentQ++;
+            
+            if(currentQ < questions.length) {
+                renderQuestion();
+            } else {
+                showResults();
+            }
+        }
+
+        function showResults() {
+            const box = document.getElementById('quiz-box');
+            box.innerHTML = `
+                <h2 class="mono">Assessment Complete</h2>
+                <p style="font-size: 2rem; margin: 20px 0;">Score: ${score} / ${questions.length}</p>
+                <div class="stamp">${score === questions.length ? 'CERTIFIED EXPERT' : 'REview REQUIRED'}</div>
+                <button class="quiz-option" onclick="location.reload()">RESTART BOOTCAMP</button>
+            `;
+        }
+    </script>
+</body>
+</html>
